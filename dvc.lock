@@ -9,7 +9,7 @@ stages:
       size: 1915795
     - path: params.yaml
       hash: md5
-      md5: e7049ffd5a82ecd798ae958c922930cd
+      md5: 1457c5291fb492bb2bfe87894b40c067
       size: 421
     - path: src/preprocess.py
       hash: md5
@@ -18,28 +18,28 @@ stages:
     params:
       params.yaml:
         data.random_state: 42
-        data.raw_path: data/dataset_v1.csv
+        data.raw_path: data/dataset_v2.csv
         data.target: MedHouseVal
         data.test_size: 0.2
     outs:
     - path: data/processed.npz
       hash: md5
-      md5: dc621ad7ba8b8136353631a5d81d0bc4
-      size: 1487082
+      md5: 501e7352d053f69c3a1be375e88da5ac
+      size: 1465122
     - path: models/preprocessor.joblib
       hash: md5
-      md5: 15995209dd35eb71c127069a0a7ddb1e
+      md5: 0cbca81721d68569974378faa434218c
       size: 2437
   train:
     cmd: python src/train.py
     deps:
     - path: data/processed.npz
       hash: md5
-      md5: dc621ad7ba8b8136353631a5d81d0bc4
-      size: 1487082
+      md5: 501e7352d053f69c3a1be375e88da5ac
+      size: 1465122
     - path: params.yaml
       hash: md5
-      md5: e7049ffd5a82ecd798ae958c922930cd
+      md5: 1457c5291fb492bb2bfe87894b40c067
       size: 421
     - path: src/train.py
       hash: md5
@@ -64,23 +64,23 @@ stages:
     outs:
     - path: models/best_model.joblib
       hash: md5
-      md5: c6bb4bcb9a81100cbd1be725d2646ea2
-      size: 271480
+      md5: e9286d8353fc3083a2f3115c4dc5e54e
+      size: 270760
     - path: models/models_results.json
       hash: md5
-      md5: 523c58fcd7e8f2e7111478ab3bc10ee7
-      size: 470
+      md5: 90792d057d1aa55235fbdddbbfdda243
+      size: 471
   evaluate:
     cmd: python src/evaluate.py
     deps:
     - path: data/processed.npz
       hash: md5
-      md5: dc621ad7ba8b8136353631a5d81d0bc4
-      size: 1487082
+      md5: 501e7352d053f69c3a1be375e88da5ac
+      size: 1465122
     - path: models/best_model.joblib
       hash: md5
-      md5: c6bb4bcb9a81100cbd1be725d2646ea2
-      size: 271480
+      md5: e9286d8353fc3083a2f3115c4dc5e54e
+      size: 270760
     - path: src/evaluate.py
       hash: md5
       md5: aee557e0c9fa5e92bb869812565f7e2f
@@ -88,5 +88,5 @@ stages:
     outs:
     - path: metrics.json
       hash: md5
-      md5: 11ec054c65e385bb77aa7bfaba0cd1f4
+      md5: d1a229d47753b3b04d88df2462e47a0f
       size: 69
