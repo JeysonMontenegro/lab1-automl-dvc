@@ -3,14 +3,10 @@ stages:
   preprocess:
     cmd: python src/preprocess.py
     deps:
-    - path: data/dataset_v1.csv
-      hash: md5
-      md5: fa9fe4cf24f70b69ac65fb33062ddf34
-      size: 1915795
     - path: params.yaml
       hash: md5
-      md5: 1457c5291fb492bb2bfe87894b40c067
-      size: 421
+      md5: 16816656aad2d6b37c8008f280a38d19
+      size: 593
     - path: src/preprocess.py
       hash: md5
       md5: e7f4081036f4625fd3433837c3ea3fc4
@@ -18,33 +14,33 @@ stages:
     params:
       params.yaml:
         data.random_state: 42
-        data.raw_path: data/dataset_v2.csv
+        data.raw_path: data/dataset_v4.csv
         data.target: MedHouseVal
         data.test_size: 0.2
     outs:
     - path: data/processed.npz
       hash: md5
-      md5: 501e7352d053f69c3a1be375e88da5ac
-      size: 1465122
+      md5: 6a4a8e36a5c3cd715723eb2be01a3fa4
+      size: 1637890
     - path: models/preprocessor.joblib
       hash: md5
-      md5: 0cbca81721d68569974378faa434218c
-      size: 2437
+      md5: 34e8387fb9556310f5ad7931f334076c
+      size: 2613
   train:
     cmd: python src/train.py
     deps:
     - path: data/processed.npz
       hash: md5
-      md5: 501e7352d053f69c3a1be375e88da5ac
-      size: 1465122
+      md5: 6a4a8e36a5c3cd715723eb2be01a3fa4
+      size: 1637890
     - path: params.yaml
       hash: md5
-      md5: 1457c5291fb492bb2bfe87894b40c067
-      size: 421
+      md5: 16816656aad2d6b37c8008f280a38d19
+      size: 593
     - path: src/train.py
       hash: md5
-      md5: 6a1b680d599b14f5b4d319627578b700
-      size: 2653
+      md5: 0dd55c80bc5f5a8e02ab0a07069ad811
+      size: 2776
     params:
       params.yaml:
         models:
@@ -64,29 +60,33 @@ stages:
     outs:
     - path: models/best_model.joblib
       hash: md5
-      md5: e9286d8353fc3083a2f3115c4dc5e54e
-      size: 270760
+      md5: 6b95fe70c344f2b7a4061d49011c9ccb
+      size: 272488
     - path: models/models_results.json
       hash: md5
-      md5: 90792d057d1aa55235fbdddbbfdda243
-      size: 471
+      md5: dcb7c184467715a29b7b63c24f6dcc68
+      size: 370
   evaluate:
     cmd: python src/evaluate.py
     deps:
     - path: data/processed.npz
       hash: md5
-      md5: 501e7352d053f69c3a1be375e88da5ac
-      size: 1465122
+      md5: 6a4a8e36a5c3cd715723eb2be01a3fa4
+      size: 1637890
     - path: models/best_model.joblib
       hash: md5
-      md5: e9286d8353fc3083a2f3115c4dc5e54e
-      size: 270760
+      md5: 6b95fe70c344f2b7a4061d49011c9ccb
+      size: 272488
+    - path: models/models_results.json
+      hash: md5
+      md5: dcb7c184467715a29b7b63c24f6dcc68
+      size: 370
     - path: src/evaluate.py
       hash: md5
-      md5: aee557e0c9fa5e92bb869812565f7e2f
-      size: 839
+      md5: 18b88beae61f972b33f2d9f1b6ffbe5d
+      size: 1661
     outs:
     - path: metrics.json
       hash: md5
-      md5: d1a229d47753b3b04d88df2462e47a0f
-      size: 69
+      md5: e69a99b2353c7cffa798c5e9a75e6f88
+      size: 592

@@ -1,19 +1,25 @@
 data:
-  raw_path: "data/dataset_v2.csv"
+  # Ruta del dataset actual
+  raw_path: "data/dataset_v4.csv"
+
+  # Columna objetivo y parámetros del split
   target: "MedHouseVal"
   test_size: 0.2
   random_state: 42
 
 models:
+  # Modelo 1: Regresión Lineal
   linear_regression:
     type: "linear_regression"
 
+  # Modelo 2: Random Forest
   random_forest:
     type: "random_forest"
     n_estimators: 150
     max_depth: 8
     random_state: 42
 
+  # Modelo 3: Gradient Boosting
   gradient_boosting:
     type: "gradient_boosting"
     n_estimators: 200

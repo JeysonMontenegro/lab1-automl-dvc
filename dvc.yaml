@@ -3,7 +3,6 @@ stages:
     cmd: python src/preprocess.py
     deps:
       - src/preprocess.py
-      - data/dataset_v1.csv
       - params.yaml
     params:
       - data.raw_path
@@ -32,5 +31,6 @@ stages:
       - src/evaluate.py
       - data/processed.npz
       - models/best_model.joblib
+      - models/models_results.json
     metrics:
       - metrics.json

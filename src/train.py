@@ -5,7 +5,7 @@ from pathlib import Path
 
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-from sklearn.metrics import r2_score
+from sklearn.metrics import r2_score, mean_squared_error
 import joblib
 
 
@@ -15,6 +15,9 @@ def load_params(path: str = "params.yaml"):
 
 
 def build_model(name: str, cfg: dict):
+    """
+    Construye un modelo de sklearn según la configuración definida en params.yaml
+    """
     model_type = cfg["type"]
 
     if model_type == "linear_regression":
@@ -39,9 +42,10 @@ def build_model(name: str, cfg: dict):
 
 
 def main():
+    # 1. Cargar parámetros
     params = load_params()
 
-    # Cargar datos procesados
+    # 2. Cargar datos procesados
     data_npz = np.load("data/processed.npz")
     X_train = data_npz["X_train"]
     X_test = data_npz["X_test"]
@@ -53,45 +57,40 @@ def main():
     results = []
     best_model = None
     best_name = None
-    best_score = -1e9  # Muy bajo para empezar
+    best_r2 = -999
+    best_mse = None
 
+    # 3. Entrenar y evaluar cada modelo definido en params.yaml
     for name, cfg in models_cfg.items():
         model = build_model(name, cfg)
-
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
-        score = r2_score(y_test, y_pred)
 
-        results.append(
-            {
-                "name": name,
-                "type": cfg["type"],
-                "r2_score": float(score),
-            }
-        )
+        r2 = r2_score(y_test, y_pred)
+        mse = mean_squared_error(y_test, y_pred)
 
-        if score > best_score:
-            best_score = score
+        results.append({
+            "name": name,
+            "type": cfg["type"],
+            "r2_score": float(round(r2, 5)),
+            "mse": float(round(mse, 5))
+        })
+
+        if r2 > best_r2:
+            best_r2 = r2
+            best_mse = mse
             best_model = model
             best_name = name
 
-    models_dir = Path("models")
-    models_dir.mkdir(exist_ok=True)
+    # 4. Guardar el mejor modelo
+    Path("models").mkdir(exist_ok=True)
+    joblib.dump(best_model, "models/best_model.joblib")
 
-    # Guardar el mejor modelo
-    joblib.dump(best_model, models_dir / "best_model.joblib")
+    # 5. Guardar resultados de todos los modelos
+    with open("models/models_results.json", "w") as f:
+        json.dump(results, f, indent=2)
 
-    # Guardar información de resultados para referencia
-    with open(models_dir / "models_results.json", "w") as f:
-        json.dump(
-            {
-                "best_model": best_name,
-                "best_r2_score": float(best_score),
-                "all_models": results,
-            },
-            f,
-            indent=2,
-        )
+    print(f"Mejor modelo: {best_name} (R2={best_r2:.4f}, MSE={best_mse:.4f})")
 
 
 if __name__ == "__main__":
