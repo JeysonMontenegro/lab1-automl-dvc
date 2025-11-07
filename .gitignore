@@ -5,3 +5,4 @@ data/*.csv
 data/*.npz
 models/
 .dvc/cache/
+/metrics.json

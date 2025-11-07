@@ -1,0 +1,36 @@
+stages:
+  preprocess:
+    cmd: python src/preprocess.py
+    deps:
+      - src/preprocess.py
+      - data/dataset_v1.csv
+      - params.yaml
+    params:
+      - data.raw_path
+      - data.target
+      - data.test_size
+      - data.random_state
+    outs:
+      - data/processed.npz
+      - models/preprocessor.joblib
+
+  train:
+    cmd: python src/train.py
+    deps:
+      - src/train.py
+      - data/processed.npz
+      - params.yaml
+    params:
+      - models
+    outs:
+      - models/best_model.joblib
+      - models/models_results.json
+
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+      - src/evaluate.py
+      - data/processed.npz
+      - models/best_model.joblib
+    metrics:
+      - metrics.json
